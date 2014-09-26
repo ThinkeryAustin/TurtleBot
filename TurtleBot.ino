@@ -1,9 +1,9 @@
 // TurtleDuino Obstacles Avoiding Robot By:RobDavinci
 #include <Servo.h> //include Servo library
 const int RForward = 180;
-const int RBackward = 0;
-const int LForward = RBackward;
-const int LBackward = RForward;
+const int RBackward = 120;
+const int LForward = RForward;
+const int LBackward = RBackward;
 const int RNeutral = 90;
 const int LNeutral = 90; //constants for motor speed
 const int pingPin = 7;
