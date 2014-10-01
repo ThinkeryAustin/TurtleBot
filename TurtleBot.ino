@@ -1,5 +1,7 @@
 // TurtleDuino Obstacles Avoiding Robot By:RobDavinci
 #include <Servo.h> //include Servo library
+#include <TimedAction.h>
+
 const int RForward = 180;
 const int RBackward = 120;
 const int LForward = RForward;
@@ -14,6 +16,9 @@ Servo panMotor;
 Servo leftMotor;
 Servo rightMotor; //declare motors
 long duration; //time it takes to recieve PING))) signal
+TimedAction danceTimer = TimedAction(60000, dance);
+char dancing = 0;
+const int danceInterval = 5;  // minutes between dances
 
 void setup()
 {
@@ -27,21 +32,21 @@ void setup()
 void loop()
 {
   int distanceFwd = ping();
-  Serial.print("Ping returned");
-  Serial.print(distanceFwd);
-  Serial.println();
+  //Serial.print("Ping returned");
+  //Serial.print(distanceFwd);
+  //Serial.println();
   
-  if (distanceFwd>dangerThresh) //if path is clear
+  danceTimer.check();
+  
+  if (distanceFwd>dangerThresh && !dancing) //if path is clear
   {
-    Serial.println("Moving forward");
-    leftMotor.write(LForward);
-    rightMotor.write(RForward); //move forward
+    //Serial.println("Moving forward");
+    moveForward();
   }
-  else //if path is blocked
+  else if (!dancing) //if path is blocked
   {
-    Serial.println("Path blocked. Scanning...");
-    leftMotor.write(LNeutral);
-    rightMotor.write(RNeutral);
+    //Serial.println("Path blocked. Scanning...");
+    stopMotors();
     panMotor.write(0);
     delay(500);
     rightDistance = ping(); //scan to the right
@@ -60,20 +65,17 @@ void compareDistance()
 {
   if (leftDistance>rightDistance) //if left is less obstructed
   {
-    leftMotor.write(LBackward);
-    rightMotor.write(RForward); //turn left
+    turnLeft();
     delay(2000);
   }
   else if (rightDistance>leftDistance) //if right is less obstructed
   {
-    leftMotor.write(LForward);
-    rightMotor.write(RBackward); //turn right
+    turnRight();
     delay(2000);
   }
    else //if they are equally obstructed
   {
-    leftMotor.write(LForward);
-    rightMotor.write(RBackward); //turn 180 degrees
+    turnRight(); //turn 180 degrees
     delay(2000);
   }
 }
@@ -96,3 +98,57 @@ long ping()
   return duration / 29 / 2;
 }
 
+void turnLeft() {
+  leftMotor.write(LBackward);
+  rightMotor.write(RForward);
+}
+
+void turnRight() {
+  leftMotor.write(LForward);
+  rightMotor.write(RBackward);
+}
+
+void moveForward() {
+  leftMotor.write(LForward);
+  rightMotor.write(RForward);
+}
+
+void stopMotors() {
+  leftMotor.write(LNeutral);
+  rightMotor.write(RNeutral);
+}
+
+void dance() {
+  static int minCount = 1;
+	
+  minCount++;
+  if (minCount == danceInterval) {
+    dancing = 1;
+
+    Serial.println("d1b");
+
+    // do the dance
+    for (int i = 0; i < 4; i++) {
+      turnRight();
+      delay(2000);
+	  moveForward();
+	  delay(2000);
+	  stopMotors();
+	  delay(2000);
+	
+	  for (int j = 0; j < 4; j++) {
+	    turnLeft();
+        delay(2000);
+	    moveForward();
+	    delay(2000);
+	    stopMotors();
+	    delay(2000);
+      }	
+	}
+
+    // reset flags
+    Serial.println("d1e");
+    dancing = 0;
+    minCount = 1;
+  }
+}
