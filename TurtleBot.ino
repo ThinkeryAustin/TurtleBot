@@ -19,6 +19,7 @@ long duration; //time it takes to recieve PING))) signal
 TimedAction danceTimer = TimedAction(60000, dance);
 char dancing = 0;
 const int danceInterval = 5;  // minutes between dances
+const int danceStepInterval = 2000;  // milliseconds between dance steps
 
 void setup()
 {
@@ -27,6 +28,7 @@ void setup()
   panMotor.attach(6); //attach motors to proper pins
   panMotor.write(90); //set PING))) pan to center
   Serial.begin(9600);
+  Serial.println("turtle");  // identify the robot to any listening devices
 }
 
 void loop()
@@ -130,19 +132,19 @@ void dance() {
     // do the dance
     for (int i = 0; i < 4; i++) {
       turnRight();
-      delay(2000);
+      delay(danceStepInterval);
 	  moveForward();
-	  delay(2000);
+	  delay(danceStepInterval);
 	  stopMotors();
-	  delay(2000);
+	  delay(danceStepInterval);
 	
 	  for (int j = 0; j < 4; j++) {
 	    turnLeft();
-        delay(2000);
+        delay(danceStepInterval);
 	    moveForward();
-	    delay(2000);
+	    delay(danceStepInterval);
 	    stopMotors();
-	    delay(2000);
+	    delay(danceStepInterval);
       }	
 	}
 
