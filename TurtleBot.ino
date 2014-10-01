@@ -122,7 +122,7 @@ void stopMotors() {
 
 void dance() {
   static int minCount = 1;
-	
+
   minCount++;
   if (minCount == danceInterval) {
     dancing = 1;
@@ -133,20 +133,20 @@ void dance() {
     for (int i = 0; i < 4; i++) {
       turnRight();
       delay(danceStepInterval);
-	  moveForward();
-	  delay(danceStepInterval);
-	  stopMotors();
-	  delay(danceStepInterval);
-	
-	  for (int j = 0; j < 4; j++) {
-	    turnLeft();
+      moveForward();
+      delay(danceStepInterval);
+      stopMotors();
+      delay(danceStepInterval);
+      
+      for (int j = 0; j < 4; j++) {
+        turnLeft();
         delay(danceStepInterval);
-	    moveForward();
-	    delay(danceStepInterval);
-	    stopMotors();
-	    delay(danceStepInterval);
+        moveForward();
+        delay(danceStepInterval);
+        stopMotors();
+        delay(danceStepInterval);
       }	
-	}
+    }
 
     // reset flags
     Serial.println("d1e");
