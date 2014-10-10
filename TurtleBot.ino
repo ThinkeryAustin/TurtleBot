@@ -15,8 +15,8 @@
 // etc
 const int RForward = 180;
 const int RBackward = 120;
-const int LForward = 180;
-const int LBackward = 120;
+const int LForward = 0;
+const int LBackward = 60;
 const int RNeutral = 90;
 const int LNeutral = 90;
 
