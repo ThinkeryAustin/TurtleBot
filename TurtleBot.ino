@@ -2,20 +2,36 @@
 #include <Servo.h> //include Servo library
 #include <TimedAction.h>
 
+// constants for motor speeds
+//
+// speed is an integer from 0 to 180
+// 0 is full speed backward
+// 90 is stopped
+// 180 is full speed forward
+//
+// RForward is right motor forward speed
+// LBackward is left motor backward speed
+// RNeutral is right motor neutral (stopped) speed
+// etc
 const int RForward = 180;
 const int RBackward = 120;
-const int LForward = RForward;
-const int LBackward = RBackward;
+const int LForward = 180;
+const int LBackward = 120;
 const int RNeutral = 90;
-const int LNeutral = 90; //constants for motor speed
-const int pingPin = 7;
-const int irPin = 0;  //Sharp infrared sensor pin
-const int dangerThresh = 10; //threshold for obstacles (in cm)
-int leftDistance, rightDistance; //distances on either side
+const int LNeutral = 90;
+
+// declare motors
 Servo panMotor; 
 Servo leftMotor;
-Servo rightMotor; //declare motors
-long duration; //time it takes to recieve PING))) signal
+Servo rightMotor;
+
+// declare pins and settings for ping sensor
+const int pingPin = 7;
+const int dangerThresh = 10; // threshold for obstacles (in cm)
+int leftDistance, rightDistance; // distances on either side
+long duration; // time it takes to receive PING))) signal
+
+// declare timers and settings for dancing
 TimedAction danceTimer = TimedAction(60000, dance);
 char dancing = 0;
 const int danceInterval = 5;  // minutes between dances
@@ -23,10 +39,15 @@ const int danceStepInterval = 2000;  // milliseconds between dance steps
 
 void setup()
 {
+  // setup the pins use for the servo motors
   rightMotor.attach(11);
   leftMotor.attach(10);
-  panMotor.attach(6); //attach motors to proper pins
-  panMotor.write(90); //set PING))) pan to center
+  panMotor.attach(6);
+  
+  //set PING))) pan to center
+  panMotor.write(90);
+  
+  // set up serial port
   Serial.begin(9600);
   Serial.println("turtle");  // identify the robot to any listening devices
 }
@@ -65,26 +86,26 @@ void loop()
  
 void compareDistance()
 {
-  if (leftDistance>rightDistance) //if left is less obstructed
+  if (leftDistance>rightDistance) // if left is less obstructed
   {
     turnLeft();
     delay(2000);
   }
-  else if (rightDistance>leftDistance) //if right is less obstructed
+  else if (rightDistance>leftDistance) // if right is less obstructed
   {
     turnRight();
     delay(2000);
   }
-   else //if they are equally obstructed
+  else // if they are equally obstructed
   {
-    turnRight(); //turn 180 degrees
+    turnRight(); // turn 180 degrees
     delay(2000);
   }
 }
 
 long ping()
 {
-  // Send out PING))) signal pulse
+  // send out PING))) signal pulse
   pinMode(pingPin, OUTPUT);
   digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
@@ -92,14 +113,15 @@ long ping()
   delayMicroseconds(5);
   digitalWrite(pingPin, LOW);
  
-  //Get duration it takes to receive echo
+  // get duration it takes to receive echo
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
  
-  //Convert duration into distance
+  // convert duration into distance
   return duration / 29 / 2;
 }
 
+// functions for moving the bot around
 void turnLeft() {
   leftMotor.write(LBackward);
   rightMotor.write(RForward);
@@ -120,6 +142,7 @@ void stopMotors() {
   rightMotor.write(RNeutral);
 }
 
+// function to do dance routine
 void dance() {
   static int minCount = 1;
 
