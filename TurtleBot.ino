@@ -5,18 +5,20 @@
 // constants for motor speeds
 //
 // speed is an integer from 0 to 180
-// 0 is full speed backward
-// 90 is stopped
-// 180 is full speed forward
+// 0 is full speed CCW
+// 90 is full stop
+// 180 is full speed CW
 //
-// RForward is right motor forward speed
-// LBackward is left motor backward speed
+// RForward is right servo forward (CW) speed
+// LForward is left servo forward (CCW) speed
+// RBackward is left motor backward (CCW)speed
+// LBackward is right motor backward (CW) speed
 // RNeutral is right motor neutral (stopped) speed
 // etc
 const int RForward = 180;
-const int RBackward = 120;
 const int LForward = 0;
-const int LBackward = 60;
+const int RBackward = 0;
+const int LBackward = 180;
 const int RNeutral = 90;
 const int LNeutral = 90;
 
@@ -27,7 +29,7 @@ Servo rightMotor;
 
 // declare pins and settings for ping sensor
 const int pingPin = 7;
-const int dangerThresh = 10; // threshold for obstacles (in cm)
+const int dangerThresh = 15; // threshold for obstacles (in cm)
 int leftDistance, rightDistance; // distances on either side
 long duration; // time it takes to receive PING))) signal
 
@@ -89,17 +91,17 @@ void compareDistance()
   if (leftDistance>rightDistance) // if left is less obstructed
   {
     turnLeft();
-    delay(2000);
+    delay(4000);
   }
   else if (rightDistance>leftDistance) // if right is less obstructed
   {
     turnRight();
-    delay(2000);
+    delay(4000);
   }
   else // if they are equally obstructed
   {
     turnRight(); // turn 180 degrees
-    delay(2000);
+    delay(8000);
   }
 }
 
