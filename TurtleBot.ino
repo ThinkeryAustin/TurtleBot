@@ -1,4 +1,6 @@
-// TurtleDuino Obstacles Avoiding Robot By:RobDavinci
+// TurtleDuino Obstacles Avoiding Robot 
+//  Originally By:RobDavinci
+//  Heavily modified by: Ken Sharp
 #include <Servo.h> //include Servo library
 #include <TimedAction.h>
 
